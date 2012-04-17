@@ -79,6 +79,31 @@ static GLboolean initLibraries(void)
     }
 #endif // _GLFW_NO_DLOAD_WINMM
 
+#ifndef _GLFW_NO_DLOAD_TOUCH
+    // user32.dll (for touch input)
+
+    _glfw.win32.touch.instance = LoadLibrary(L"user32.dll");
+    if (!_glfw.win32.touch.instance)
+        return GL_FALSE;
+
+    _glfw.win32.touch.GetTouchInputInfo = (GETTOUCHINPUTINFO_T)
+        GetProcAddress(_glfw.win32.touch.instance, "GetTouchInputInfo");
+    _glfw.win32.touch.CloseTouchInputHandle = (CLOSETOUCHINPUTHANDLE_T)
+        GetProcAddress(_glfw.win32.touch.instance, "CloseTouchInputHandle");
+    _glfw.win32.touch.RegisterTouchWindow = (REGISTERTOUCHWINDOW_T)
+        GetProcAddress(_glfw.win32.touch.instance, "RegisterTouchWindow");
+    _glfw.win32.touch.UnregisterTouchWindow = (UNREGISTERTOUCHWINDOW_T)
+        GetProcAddress(_glfw.win32.touch.instance, "UnregisterTouchWindow");
+
+    if (!_glfw.win32.touch.GetTouchInputInfo ||
+        !_glfw.win32.touch.CloseTouchInputHandle ||
+        !_glfw.win32.touch.RegisterTouchWindow ||
+        !_glfw.win32.touch.UnregisterTouchWindow)
+    {
+        return GL_FALSE;
+    }
+#endif // _GLFW_NO_DLOAD_TOUCH
+
     return GL_TRUE;
 }
 
