@@ -883,6 +883,10 @@ void _glfwPlatformWaitEvents(void)
     _glfwPlatformPollEvents();
 }
 
+void _glfwPlatformSetTouchInput(_GLFWwindow* window, int enabled)
+{
+}
+
 void _glfwPlatformSetCursorPos(_GLFWwindow* window, int x, int y)
 {
     if (window->monitor)

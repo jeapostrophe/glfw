@@ -532,6 +532,7 @@ extern "C" {
 #define GLFW_CURSOR_MODE            0x00030001
 #define GLFW_STICKY_KEYS            0x00030002
 #define GLFW_STICKY_MOUSE_BUTTONS   0x00030003
+#define GLFW_TOUCH                  0x00030004
 
 #define GLFW_CURSOR_NORMAL          0x00040001
 #define GLFW_CURSOR_HIDDEN          0x00040002
@@ -695,6 +696,27 @@ typedef void (* GLFWkeyfun)(GLFWwindow*,int,int);
  *  @sa glfwSetCharCallback
  */
 typedef void (* GLFWcharfun)(GLFWwindow*,int);
+
+/*! @brief The function signature for touch start/end callbacks.
+ *  @param[in] window The window that received the event.
+ *  @param[in] touch The touch that started or ended.
+ *  @param[in] action One of @ref GLFW_PRESS or @ref GLFW_RELEASE.
+ *  @ingroup input
+ *
+ *  @sa glfwSetTouchCallback
+ */
+typedef void (* GLFWtouchfun)(GLFWwindow*,int,int);
+
+/*! @brief The function signature for touch position callbacks.
+ *  @param[in] window The window that received the event.
+ *  @param[in] touch The touch that moved.
+ *  @param[in] xpos The new x-coordinate of the touch.
+ *  @param[in] ypos The new y-coordinate of the touch.
+ *  @ingroup input
+ *
+ *  @sa glfwSetTouchPosCallback
+ */
+typedef void (* GLFWtouchposfun)(GLFWwindow*,int,double,double);
 
 /*! @brief The function signature for monitor configuration callbacks.
  *  @param[in] monitor The monitor that was connected or disconnected.
@@ -1561,6 +1583,22 @@ GLFWAPI void glfwSetCursorEnterCallback(GLFWwindow* window, GLFWcursorenterfun c
  *  a touchpad scrolling area.
  */
 GLFWAPI void glfwSetScrollCallback(GLFWwindow* window, GLFWscrollfun cbfun);
+
+/*! @brief Sets the touch start/end callback.
+ *  @param[in] window The window whose callback to set.
+ *  @param[in] cbfun The new touch start/end callback, or @c NULL to remove the
+ *  currently set callback.
+ *  @ingroup input
+ */
+GLFWAPI void glfwSetTouchCallback(GLFWwindow* window, GLFWtouchfun cbfun);
+
+/*! @brief Sets the touch position callback.
+ *  @param[in] window The window whose callback to set.
+ *  @param[in] cbfun The new touch position callback, or @c NULL to remove the
+ *  currently set callback.
+ *  @ingroup input
+ */
+GLFWAPI void glfwSetTouchPosCallback(GLFWwindow* window, GLFWtouchposfun cbfun);
 
 /*! @brief Returns a property of the specified joystick.
  *  @param[in] joy The joystick to query.
