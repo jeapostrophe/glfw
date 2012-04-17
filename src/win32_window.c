@@ -596,6 +596,9 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg,
             TOUCHINPUT* inputs;
             UINT count = LOWORD(wParam);
 
+            if (!_glfw.win32.touch.available)
+                return 0;
+
             inputs = (TOUCHINPUT*) malloc(sizeof(TOUCHINPUT) * count);
 
             if (_glfw_GetTouchInputInfo((HTOUCHINPUT) lParam,
