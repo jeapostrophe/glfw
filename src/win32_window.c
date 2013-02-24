@@ -1075,6 +1075,9 @@ void _glfwPlatformWaitEvents(void)
 
 void _glfwPlatformSetTouchInput(_GLFWwindow* window, int enabled)
 {
+    if (!_glfw.win32.touch.available)
+        return;
+
     if (enabled)
         _glfw_RegisterTouchWindow(window->win32.handle, 0);
     else
