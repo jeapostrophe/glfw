@@ -237,6 +237,7 @@ GLFW.
 
 ## Changes for version 3.0
 
+ * Added `GLFWimage` struct for passing icon images to `glfwSetWindowIcons`
  * Added `GLFWmonitor` and updated monitor-related functions to take a monitor
    handle
  * Added `glfwGetMonitors` and `glfwGetPrimaryMonitor` for enumerating available
@@ -247,6 +248,7 @@ GLFW.
    changes in the set of available monitors
  * Added `GLFWwindow` and updated window-related functions and callbacks to take
    a window handle
+ * Added `glfwSetWindowIcons` for setting the various icons of a window
  * Added `glfwGetWindowPos` for retrieving the position of a window
  * Added `glfwDefaultWindowHints` for resetting all window hints to their
    default values
@@ -466,6 +468,7 @@ skills.
  * Peoro
  * Braden Pellett
  * Arturo J. Pérez
+ * Orson Peters
  * Jorge Rodriguez
  * Ed Ropple
  * Riku Salminen

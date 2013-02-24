@@ -913,9 +913,9 @@ void _glfwPlatformSetWindowSize(_GLFWwindow* window, int width, int height)
         XResizeWindow(_glfw.x11.display, window->x11.handle, width, height);
 }
 
-void _glfwPlatformSetWindowIcons(_GLFWwindow* window, GLFWimage *icons, int numicons)
+void _glfwPlatformSetWindowIcons(_GLFWwindow* window, GLFWimage* images, int count)
 {
-    /* TODO: implement this */
+    // TODO: Implement this.
 }
 
 void _glfwPlatformIconifyWindow(_GLFWwindow* window)

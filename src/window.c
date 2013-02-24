@@ -464,17 +464,18 @@ GLFWAPI void glfwSetWindowSize(GLFWwindow* handle, int width, int height)
     _glfwPlatformSetWindowSize(window, width, height);
 }
 
-GLFWAPI void glfwSetWindowIcons(GLFWwindow* handle, GLFWimage* icons, int numicons)
+GLFWAPI void glfwSetWindowIcons(GLFWwindow* handle, GLFWimage* images, int count)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
     _GLFW_REQUIRE_INIT();
 
-    if (numicons < 1)
+    if (count < 1)
     {
+        _glfwInputError(GLFW_INVALID_VALUE, NULL);
         return;
     }
 
-    _glfwPlatformSetWindowIcons(window, icons, numicons);
+    _glfwPlatformSetWindowIcons(window, images, count);
 }
 
 GLFWAPI void glfwIconifyWindow(GLFWwindow* handle)
