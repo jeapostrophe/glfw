@@ -234,11 +234,11 @@ extern "C" {
 
 /*! @name Key and button actions
  *  @{ */
-/*! @brief The key or button was released.
+/*! @brief The key or button was released or the touch ended.
  *  @ingroup input
  */
 #define GLFW_RELEASE                0
-/*! @brief The key or button was pressed.
+/*! @brief The key or button was pressed or the touch started.
  *  @ingroup input
  */
 #define GLFW_PRESS                  1
@@ -246,6 +246,10 @@ extern "C" {
  *  @ingroup input
  */
 #define GLFW_REPEAT                 2
+/*! @brief The touch was moved.
+ *  @ingroup input
+ */
+#define GLFW_MOVE                   3
 /*! @} */
 
 /* Keyboard raw key codes.
@@ -697,26 +701,17 @@ typedef void (* GLFWkeyfun)(GLFWwindow*,int,int);
  */
 typedef void (* GLFWcharfun)(GLFWwindow*,int);
 
-/*! @brief The function signature for touch start/end callbacks.
+/*! @brief The function signature for touch callbacks.
  *  @param[in] window The window that received the event.
- *  @param[in] touch The touch that started or ended.
- *  @param[in] action One of @ref GLFW_PRESS or @ref GLFW_RELEASE.
- *  @ingroup input
- *
- *  @sa glfwSetTouchCallback
- */
-typedef void (* GLFWtouchfun)(GLFWwindow*,int,int);
-
-/*! @brief The function signature for touch position callbacks.
- *  @param[in] window The window that received the event.
- *  @param[in] touch The touch that moved.
+ *  @param[in] touch The touch that triggered the event.
+ *  @param[in] action One of @ref GLFW_PRESS, @c GLFW_MOVE or @ref GLFW_RELEASE.
  *  @param[in] xpos The new x-coordinate of the touch.
  *  @param[in] ypos The new y-coordinate of the touch.
  *  @ingroup input
  *
- *  @sa glfwSetTouchPosCallback
+ *  @sa glfwSetTouchCallback
  */
-typedef void (* GLFWtouchposfun)(GLFWwindow*,int,double,double);
+typedef void (* GLFWtouchfun)(GLFWwindow*,int,int,double,double);
 
 /*! @brief The function signature for monitor configuration callbacks.
  *  @param[in] monitor The monitor that was connected or disconnected.
@@ -1584,21 +1579,13 @@ GLFWAPI void glfwSetCursorEnterCallback(GLFWwindow* window, GLFWcursorenterfun c
  */
 GLFWAPI void glfwSetScrollCallback(GLFWwindow* window, GLFWscrollfun cbfun);
 
-/*! @brief Sets the touch start/end callback.
+/*! @brief Sets the touch callback.
  *  @param[in] window The window whose callback to set.
- *  @param[in] cbfun The new touch start/end callback, or @c NULL to remove the
- *  currently set callback.
+ *  @param[in] cbfun The new touch callback, or @c NULL to remove the currently
+ *  set callback.
  *  @ingroup input
  */
 GLFWAPI void glfwSetTouchCallback(GLFWwindow* window, GLFWtouchfun cbfun);
-
-/*! @brief Sets the touch position callback.
- *  @param[in] window The window whose callback to set.
- *  @param[in] cbfun The new touch position callback, or @c NULL to remove the
- *  currently set callback.
- *  @ingroup input
- */
-GLFWAPI void glfwSetTouchPosCallback(GLFWwindow* window, GLFWtouchposfun cbfun);
 
 /*! @brief Returns a property of the specified joystick.
  *  @param[in] joy The joystick to query.
