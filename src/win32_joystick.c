@@ -91,6 +91,14 @@ void _glfwTerminateJoysticks(void)
 //////                       GLFW platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
+void _glfwPlatformPollJoystickEvents(void)
+{
+  // Ideally, this would read all the valid parameters, axes, and
+  // buttons using the logic from the functions below in a cache,
+  // which those functions would read. However, I don't have access to
+  // a Win32 machine to test and develop it on.
+}
+
 int _glfwPlatformGetJoystickParam(int joy, int param)
 {
     JOYCAPS jc;
