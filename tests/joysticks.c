@@ -67,40 +67,46 @@ static void draw_joystick(Joystick* j, int x, int y, int width, int height)
     int axis_width, axis_height;
     int button_width, button_height;
 
-    axis_width = width / j->axis_count;
-    axis_height = 3 * height / 4;
-
-    button_width = width / j->button_count;
-    button_height = height / 4;
-
-    for (i = 0;  i < j->axis_count;  i++)
+    if ( j->axis_count > 0 )
     {
-        float value = j->axes[i] / 2.f + 0.5f;
+      axis_width = width / j->axis_count;
+      axis_height = 3 * height / 4;
 
-        glColor3f(0.3f, 0.3f, 0.3f);
-        glRecti(x + i * axis_width,
-                y,
-                x + (i + 1) * axis_width,
-                y + axis_height);
+      for (i = 0;  i < j->axis_count;  i++)
+      {
+          float value = j->axes[i] / 2.f + 0.5f;
 
-        glColor3f(1.f, 1.f, 1.f);
-        glRecti(x + i * axis_width,
-                y + (int) (value * (axis_height - 5)),
-                x + (i + 1) * axis_width,
-                y + 5 + (int) (value * (axis_height - 5)));
+          glColor3f(0.3f, 0.3f, 0.3f);
+          glRecti(x + i * axis_width,
+                  y,
+                  x + (i + 1) * axis_width,
+                  y + axis_height);
+
+          glColor3f(1.f, 1.f, 1.f);
+          glRecti(x + i * axis_width,
+                  y + (int) (value * (axis_height - 5)),
+                  x + (i + 1) * axis_width,
+                  y + 5 + (int) (value * (axis_height - 5)));
+      }
     }
 
-    for (i = 0;  i < j->button_count;  i++)
+    if ( j->button_count > 0 ) 
     {
-        if (j->buttons[i])
+      button_width = width / j->button_count;
+      button_height = height / 4;
+
+      for (i = 0;  i < j->button_count;  i++)
+      {
+          if (j->buttons[i])
             glColor3f(1.f, 1.f, 1.f);
-        else
+          else
             glColor3f(0.3f, 0.3f, 0.3f);
 
-        glRecti(x + i * button_width,
-                y + axis_height,
-                x + (i + 1) * button_width,
-                y + axis_height + button_height);
+          glRecti(x + i * button_width,
+                  y + axis_height,
+                  x + (i + 1) * button_width,
+                  y + axis_height + button_height);
+      }
     }
 }
 
@@ -150,7 +156,10 @@ static void refresh_joysticks(void)
                 j->axes = realloc(j->axes, j->axis_count * sizeof(float));
             }
 
-            glfwGetJoystickAxes(GLFW_JOYSTICK_1 + i, j->axes, j->axis_count);
+            if ( j->axis_count > 0 )
+            {
+                glfwGetJoystickAxes(GLFW_JOYSTICK_1 + i, j->axes, j->axis_count);
+            }
 
             button_count = glfwGetJoystickParam(GLFW_JOYSTICK_1 + i, GLFW_BUTTONS);
             if (button_count != j->button_count)
@@ -158,8 +167,10 @@ static void refresh_joysticks(void)
                 j->button_count = button_count;
                 j->buttons = realloc(j->buttons, j->button_count);
             }
-
-            glfwGetJoystickButtons(GLFW_JOYSTICK_1 + i, j->buttons, j->button_count);
+            if ( j->button_count > 0 ) 
+            {
+              glfwGetJoystickButtons(GLFW_JOYSTICK_1 + i, j->buttons, j->button_count);
+            }
 
             if (!j->present)
             {
