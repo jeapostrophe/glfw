@@ -395,6 +395,10 @@ void _glfwPlatformSetClipboardString(_GLFWwindow* window, const char* string);
  */
 const char* _glfwPlatformGetClipboardString(_GLFWwindow* window);
 
+/*! @ingroup platform
+ */
+void _glfwPlatformPollJoystickEvents(void);
+
 /*! @copydoc glfwGetJoystickParam
  *  @ingroup platform
  */

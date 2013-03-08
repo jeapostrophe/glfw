@@ -105,65 +105,6 @@ static int openJoystickDevice(int joy, const char* path)
     return GL_TRUE;
 }
 
-// Polls for and processes events for all present joysticks
-//
-static void pollJoystickEvents(void)
-{
-#ifdef __linux__
-    int i;
-    ssize_t result;
-    struct js_event e;
-
-    for (i = 0;  i <= GLFW_JOYSTICK_LAST;  i++)
-    {
-        if (!_glfw.x11.joystick[i].present)
-            continue;
-
-        // Read all queued events (non-blocking)
-        for (;;)
-        {
-            errno = 0;
-            result = read(_glfw.x11.joystick[i].fd, &e, sizeof(e));
-
-            if (errno == ENODEV)
-                _glfw.x11.joystick[i].present = GL_FALSE;
-
-            if (result == -1)
-                break;
-
-            // We don't care if it's an init event or not
-            e.type &= ~JS_EVENT_INIT;
-
-            switch (e.type)
-            {
-                case JS_EVENT_AXIS:
-                    _glfw.x11.joystick[i].axis[e.number] =
-                        (float) e.value / 32767.0f;
-
-                    // We need to change the sign for the Y axes, so that
-                    // positive = up/forward, according to the GLFW spec.
-                    if (e.number & 1)
-                    {
-                        _glfw.x11.joystick[i].axis[e.number] =
-                            -_glfw.x11.joystick[i].axis[e.number];
-                    }
-
-                    break;
-
-                case JS_EVENT_BUTTON:
-                    _glfw.x11.joystick[i].button[e.number] =
-                        e.value ? GLFW_PRESS : GLFW_RELEASE;
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    }
-#endif // __linux__
-}
-
-
 //////////////////////////////////////////////////////////////////////////
 //////                       GLFW internal API                      //////
 //////////////////////////////////////////////////////////////////////////
@@ -245,10 +186,66 @@ void _glfwTerminateJoysticks(void)
 //////                       GLFW platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
+// Polls for and processes events for all present joysticks
+//
+void _glfwPlatformPollJoystickEvents(void)
+{
+#ifdef __linux__
+    int i;
+    ssize_t result;
+    struct js_event e;
+
+    for (i = 0;  i <= GLFW_JOYSTICK_LAST;  i++)
+    {
+        if (!_glfw.x11.joystick[i].present)
+            continue;
+
+        // Read all queued events (non-blocking)
+        for (;;)
+        {
+            errno = 0;
+            result = read(_glfw.x11.joystick[i].fd, &e, sizeof(e));
+
+            if (errno == ENODEV)
+                _glfw.x11.joystick[i].present = GL_FALSE;
+
+            if (result == -1)
+                break;
+
+            // We don't care if it's an init event or not
+            e.type &= ~JS_EVENT_INIT;
+
+            switch (e.type)
+            {
+                case JS_EVENT_AXIS:
+                    _glfw.x11.joystick[i].axis[e.number] =
+                        (float) e.value / 32767.0f;
+
+                    // We need to change the sign for the Y axes, so that
+                    // positive = up/forward, according to the GLFW spec.
+                    if (e.number & 1)
+                    {
+                        _glfw.x11.joystick[i].axis[e.number] =
+                            -_glfw.x11.joystick[i].axis[e.number];
+                    }
+
+                    break;
+
+                case JS_EVENT_BUTTON:
+                    _glfw.x11.joystick[i].button[e.number] =
+                        e.value ? GLFW_PRESS : GLFW_RELEASE;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
+#endif // __linux__
+}
+
 int _glfwPlatformGetJoystickParam(int joy, int param)
 {
-    pollJoystickEvents();
-
     if (!_glfw.x11.joystick[joy].present)
         return 0;
 
@@ -274,8 +271,6 @@ int _glfwPlatformGetJoystickAxes(int joy, float* axes, int numAxes)
 {
     int i;
 
-    pollJoystickEvents();
-
     if (!_glfw.x11.joystick[joy].present)
         return 0;
 
@@ -292,8 +287,6 @@ int _glfwPlatformGetJoystickButtons(int joy, unsigned char* buttons,
                                     int numButtons)
 {
     int i;
-
-    pollJoystickEvents();
 
     if (!_glfw.x11.joystick[joy].present)
         return 0;

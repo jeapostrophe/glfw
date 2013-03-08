@@ -631,6 +631,7 @@ GLFWAPI void glfwPollEvents(void)
 {
     _GLFW_REQUIRE_INIT();
     _glfwPlatformPollEvents();
+    _glfwPlatformPollJoystickEvents();
 }
 
 GLFWAPI void glfwWaitEvents(void)
